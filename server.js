@@ -54,6 +54,21 @@ app.post("/api/notes", (req, res) => {
   }
 });
 
+// DELETE FUNCTION
+app.delete("/api/notes/:id", (req, res) => {
+  const noteId = req.params.id;
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+    } else {
+      const id = JSON.parse(data);
+      const deleteNote = id.filter((note) => note.id != noteId);
+      writeToFile("./db/db.json", deleteNote);
+      res.json(deleteNote);
+    }
+  });
+});
+
 //READ AND APPEND FUNCTION
 const readAndAppend = (content, file) => {
   fs.readFile(file, "utf8", (err, data) => {
@@ -70,7 +85,7 @@ const readAndAppend = (content, file) => {
 //WRITE FILE FUNCTION
 const writeToFile = (destination, content) =>
   fs.writeFile(destination, JSON.stringify(content, null, 4), (err) =>
-    err ? console.error(err) : console.info(`\nData written to ${destination}`)
+    err ? console.error(err) : console.info(`\n Update to ${destination}`)
   );
 
 //LISTENING
